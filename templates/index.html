@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Screen Print Color Separator</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+<h1>Screen Print Color Separator</h1>
+<form action="/process" method="post" enctype="multipart/form-data" class="panel">
+<div class="row">
+<label>Image</label>
+<input type="file" name="image" accept="image/png,image/jpeg,image/webp" required>
+</div>
+<div class="row">
+<label>Plate expand px</label>
+<input type="number" name="plate_expand_px" min="0" max="20" value="0">
+</div>
+<div class="row">
+<label>Min area (px)</label>
+<input type="number" name="min_area" min="1" max="100000" value="16">
+</div>
+<div class="row checkbox">
+<label><input type="checkbox" name="include_underbase" checked> Include underbase</label>
+</div>
+<div class="row">
+<label>Underbase spread px</label>
+<input type="number" name="underbase_spread_px" min="0" max="20" value="2">
+</div>
+<div class="row">
+<button type="submit">Process</button>
+</div>
+</form>
+{% if result %}
+<div class="panel">
+<h2>Previews</h2>
+<div class="grid">
+{% for name in result.previews %}
+<div class="tile">
+<img src="{{ url_for('serve_run_file', run_id=result.run_id, filename=name) }}" alt="preview">
+<div class="caption">{{ name }}</div>
+</div>
+{% endfor %}
+{% if result.underbase %}
+<div class="tile">
+<img src="{{ url_for('serve_run_file', run_id=result.run_id, filename=result.underbase) }}" alt="underbase">
+<div class="caption">{{ result.underbase }}</div>
+</div>
+{% endif %}
+</div>
+</div>
+<div class="panel actions">
+<a class="btn" href="{{ url_for('download_zip', run_id=result.run_id) }}">Download ZIP</a>
+</div>
+{% endif %}
+</div>
+</body>
+</html>

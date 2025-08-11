@@ -1,0 +1,13 @@
+runs/
+__pycache__/
+.DS_Store
+.venv/
+.env
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+*.log
+.vscode/
+.idea/

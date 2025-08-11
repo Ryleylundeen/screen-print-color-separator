@@ -1,5 +1,7 @@
 # Screen Print Color Separator
 
+Made for Ryley
+
 A minimal web app to convert a logo/image into screen print-ready color separations. Upload an image and the app will:
 
 - Auto-detect the number of colors using an elbow method in a LAB-like color space

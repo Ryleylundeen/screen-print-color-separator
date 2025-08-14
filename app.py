@@ -6,6 +6,7 @@ import zipfile
 import random
 from math import sqrt
 from PIL import Image
+from svg_separator import separate_color_layers
 
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -414,6 +415,30 @@ def download_zip(run_id: str):
         return redirect(url_for("index"))
     return send_file(zip_path, as_attachment=True, download_name="plates.zip")
 
+@app.route("/process-svg", methods=["POST"])
+def process_svg():
+    if "svg" not in request.files:
+        return redirect(url_for("index"))
+    file = request.files["svg"]
+    if not file.filename.endswith(".svg"):
+        return redirect(url_for("index"))
+
+    run_id = str(uuid.uuid4())
+    run_dir = os.path.join(RUNS_DIR, run_id)
+    os.makedirs(run_dir, exist_ok=True)
+
+    svg_path = os.path.join(run_dir, "input.svg")
+    file.save(svg_path)
+
+    output_dir = os.path.join(run_dir, "svg_output")
+    separate_color_layers(svg_path, output_dir)
+
+    zip_path = os.path.join(run_dir, "svg_separated.zip")
+    with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zipf:
+        for fname in os.listdir(output_dir):
+            zipf.write(os.path.join(output_dir, fname), arcname=fname)
+
+    return send_file(zip_path, as_attachment=True, download_name="separated_svgs.zip")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

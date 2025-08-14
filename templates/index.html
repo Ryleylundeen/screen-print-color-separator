@@ -33,6 +33,16 @@
 <button type="submit">Process</button>
 </div>
 </form>
+<!-- SVG Upload Form -->
+<form action="/process-svg" method="post" enctype="multipart/form-data" class="panel">
+<div class="row">
+<label>SVG File</label>
+<input type="file" name="svg" accept=".svg" required>
+</div>
+<div class="row">
+<button type="submit">Process SVG</button>
+</div>
+</form>
 {% if result %}
 <div class="panel">
 <h2>Previews</h2>
